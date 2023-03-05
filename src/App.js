@@ -1,21 +1,25 @@
 import './App.css';
-import { useState } from 'react';
-import { useLocalStorage } from 'usehooks-ts';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDeleteLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default function App() {
 	// For theme
 	const [isDarkMode, setIsDarkMode] = useState(true);
+	const root = document.querySelector(':root');
 	
 	const selectMode = () => {
 		setIsDarkMode(!isDarkMode);
+		root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
 	};
+
+	useEffect(() => {
+		// Set the default to dark mode
+		root.dataset.theme = 'dark';
+	}, []);
 
 	// For calculation
 	const [calc, setCalc] = useState("");
-	const [result, setResult] = useState("");
-
 	const ops = ['/', '*', '+', '-', '.'];
 
 	const updateCalc = value => {
@@ -26,11 +30,7 @@ export default function App() {
 		) {
 			return;
 		}
-
 		setCalc(calc + value);
-		if (!ops.includes(value)) {
-			setResult(eval(calc + value).toString());
-		}
 	};
 
 	const calculate = () => {
@@ -39,7 +39,6 @@ export default function App() {
 
 	const allClear = () => {
 		setCalc("")
-		setResult("")
 	};
 
 	const deleteLast = () => {
@@ -52,29 +51,22 @@ export default function App() {
 	};
 	
 	return (
-		<div className="App">
+		<div className="app">
 			<div className="mode_box">
-				<span id="dark_indicator" style={{ visibility: isDarkMode ? 'visible' : 'hidden' }}><p>Dark Mode</p></span>
+				<span style={{ visibility: isDarkMode ? 'hidden' : 'visible', transition: "0s" }}>
+					<p style={{transition: "0s"}}>Dark Mode</p></span>
 
 				<div className="mode">
-					
 					<input type="checkbox" id="switch" isOn={isDarkMode} onChange={selectMode}/>
 					<label for="switch"></label>
 				</div>
 
-				<span id="light_indicator" style={{ visibility: isDarkMode ? 'hidden' : 'visible' }}><p>Light Mode</p></span>
+				<span>
+					<p style={{transition: "0s"}} >Light Mode</p>
+				</span>
 			</div>
-			{/* <div className="mode">
-				<span id="dark_indicator" style={{ display: isDarkMode ? 'inline' : 'none' }}><p>Dark Mode</p></span>
-
-				<input type="checkbox" id="switch" isOn={isDarkMode} onChange={selectMode}/>
-				<label for="switch"></label>
-
-				<span id="light_indicator" style={{ display: isDarkMode ? 'none' : 'inline' }}><p>Light Mode</p></span>
-
-			</div> */}
 			
-			<main className="calculator">
+			<div className="calculator">
 				<div className="display">
 					{ calc || "0" }
 				</div>
@@ -154,7 +146,7 @@ export default function App() {
 
 					
 				</div>
-			</main>
+			</div>
 		</div>
 	);
 }
