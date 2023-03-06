@@ -123,8 +123,10 @@ p {
 
 .mode_box {
     display: flex;
+    position: absolute;
     justify-content: flex-end;
     align-items: center;
+    top: 0;
     width: 100%;
     padding-right: 1rem;
     transition: all 0.3s ease-in-out;
@@ -198,6 +200,9 @@ p {
 }
 
 @media only screen and (max-width: 480px) {
+    .app {
+        overflow: hidden;
+    }
     .calculator {
         width: 280px;
     }
